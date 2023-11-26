@@ -16,7 +16,7 @@ const blogIdValidation = body('blogId')
         const blog = blogsRepository.getBlogById(value)
 
         if (!blog) {
-            return false //OR throw new Error('Incorrect blogId')
+            throw new Error('Invalid blogId') //OR return false
         } else {
             return true
         }
