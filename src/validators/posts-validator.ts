@@ -12,11 +12,11 @@ const contentValidation = body('content')
     .isString().trim().isLength({min: 1, max: 1000}).withMessage('Invalid content')
 
 const blogIdValidation = body('blogId')
-    .isString().trim().custom((value) => {
-        const blog = blogsRepository.getBlogById(value)
+    .isString().trim().custom(async (value) => {
+        const blog = await blogsRepository.getBlogById(value)
 
         if (!blog) {
-            throw new Error('Invalid blogId') //OR return false
+            return false //OR throw new Error('Invalid blogId')
         } else {
             return true
         }
