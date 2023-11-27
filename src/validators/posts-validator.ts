@@ -3,24 +3,35 @@ import {inputModelValidation} from "../middlewares/inputModel/input-model-valida
 import {blogsRepository} from "../repositories/blogs-db-repository";
 
 const titleValidation = body('title')
-    .trim().isLength({min: 1, max: 30}).withMessage('Invalid title')
+    .trim()
+    .isLength({min: 1, max: 30})
+    .withMessage('Invalid title')
 
 const shortDescriptionValidation = body('shortDescription')
-    .isString().trim().isLength({min: 1, max: 100}).withMessage('Invalid shortDescription')
+    .isString()
+    .trim()
+    .isLength({min: 1, max: 100})
+    .withMessage('Invalid shortDescription')
 
 const contentValidation = body('content')
-    .isString().trim().isLength({min: 1, max: 1000}).withMessage('Invalid content')
+    .isString()
+    .trim()
+    .isLength({min: 1, max: 1000})
+    .withMessage('Invalid content')
 
 const blogIdValidation = body('blogId')
-    .isString().trim().custom(async (value) => {
+    .isString()
+    .trim()
+    .custom(async (value) => {
         const blog = await blogsRepository.getBlogById(value)
 
-        if (!blog) {
-            return false //OR throw new Error('Invalid blogId')
+        if (blog === null) {
+            throw new Error('Invalid blogId')
         } else {
             return true
         }
 
-    }).withMessage('Invalid blogId')
+    })
+    .withMessage('Invalid blogId')
 
 export const postValidation = () => [titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputModelValidation]
